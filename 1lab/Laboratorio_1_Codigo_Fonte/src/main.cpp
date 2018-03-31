@@ -224,8 +224,8 @@ GLuint BuildTriangles()
     float circle = 2 * M_PI, theta = (22.5 * M_PI)/180, angle = 0;
     int i = 4;
     while(angle <= circle) {
-      NDC_coefficients[i] = (cos(angle));   // X
-      NDC_coefficients[i+1] = (sin(angle)); // Y
+      NDC_coefficients[i] = (0.7*cos(angle));   // X
+      NDC_coefficients[i+1] = (0.7*sin(angle)); // Y
       NDC_coefficients[i+2] = 0.0f;             // Z
       NDC_coefficients[i+3] = 1.0f;             // W
       printf("X = %f \nY = %f \nZ = %f\n angle = %f \n\n", NDC_coefficients[i],NDC_coefficients[i+1],NDC_coefficients[i+2], angle);
