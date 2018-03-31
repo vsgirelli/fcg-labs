@@ -72,7 +72,7 @@ int main()
     // Criamos uma janela do sistema operacional, com 500 colunas e 500 linhas
     // de pixels, e com título "INF01047 ...".
     GLFWwindow* window;
-    window = glfwCreateWindow(500, 500, "INF01047 - 00261596 - Valéria S, Girelli", NULL, NULL);
+    window = glfwCreateWindow(500, 500, "INF01047 - 00261596 - Valéria S. Girelli", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -171,7 +171,7 @@ int main()
         //                |          |  |                 +--- Vértices começam em indices[0] (veja função BuildTriangles()).
         //                |          |  |                 |
         //                V          V  V                 V
-    glDrawElements(GL_TRIANGLE_FAN, 19, GL_UNSIGNED_BYTE, 0);
+    glDrawElements(GL_TRIANGLE_FAN, 18, GL_UNSIGNED_BYTE, 0);
 
         // "Desligamos" o VAO, evitando assim que operações posteriores venham a
         // alterar o mesmo. Isso evita bugs.
@@ -221,14 +221,13 @@ GLuint BuildTriangles()
     NDC_coefficients[2] = 0.0f; // Z
     NDC_coefficients[3] = 1.0f; // W
 
-    float circle = 2 * M_PI, theta = (22.5 * M_PI)/180, angle = 0;
+    float circle = 2 * M_PI, theta = (22.5 * M_PI)/180, angle = 0, radius = 0.7;
     int i = 4;
     while(angle <= circle) {
-      NDC_coefficients[i] = (0.7*cos(angle));   // X
-      NDC_coefficients[i+1] = (0.7*sin(angle)); // Y
+      NDC_coefficients[i] = radius * cos(angle);   // X
+      NDC_coefficients[i+1] = radius * sin(angle); // Y
       NDC_coefficients[i+2] = 0.0f;             // Z
       NDC_coefficients[i+3] = 1.0f;             // W
-      printf("X = %f \nY = %f \nZ = %f\n angle = %f \n\n", NDC_coefficients[i],NDC_coefficients[i+1],NDC_coefficients[i+2], angle);
       angle = angle + theta;
       i = i + 4; // testar acima com i++ direto dentro do []
     };
@@ -347,7 +346,7 @@ GLuint BuildTriangles()
     // Este vetor "indices" define a TOPOLOGIA (veja 112 do documento
     // "Aula_04_Modelagem_Geometrica_3D.pdf").
     //
-    GLubyte indices[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,1 }; // GLubyte: valores entre 0 e 255 (8 bits sem sinal).
+    GLubyte indices[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1 }; // GLubyte: valores entre 0 e 255 (8 bits sem sinal).
 
     // Criamos um buffer OpenGL para armazenar os índices acima
     GLuint indices_id;
