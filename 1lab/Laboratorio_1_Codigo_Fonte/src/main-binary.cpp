@@ -184,6 +184,11 @@ int main()
           lastSecond = 0;
         }
 
+        /*
+         *
+         *  Não consegui pensar em como resetar o contador.
+         *
+         */
         do {
           for (j = 3; j >= 0; j--) {
             if (count_matrix[seconds][j] == 0) {
