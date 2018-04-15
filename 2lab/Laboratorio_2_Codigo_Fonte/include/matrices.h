@@ -229,6 +229,8 @@ float dotproduct(glm::vec4 u, glm::vec4 v)
     float v3 = v.z;
     float v4 = v.w;
 
+    printf("u4: %f\nv4: %f\n", u4, v4);
+
     if ( u4 != 0.0f || v4 != 0.0f )
     {
         fprintf(stderr, "ERROR: Produto escalar não definido para pontos.\n");
@@ -236,6 +238,25 @@ float dotproduct(glm::vec4 u, glm::vec4 v)
     }
 
     return u1*v1 + u2*v2 + u3*v3/* AQUI o que falta para definir o produto escalar */;
+}
+
+glm::vec4 subPoints(glm::vec4 u, glm::vec4 v) {
+  float u1 = u.x;
+  float u2 = u.y;
+  float u3 = u.z;
+  float u4 = u.w;
+  float v1 = v.x;
+  float v2 = v.y;
+  float v3 = v.z;
+  float v4 = v.w;
+
+  if ( u4 != 1.0f || v4 != 1.0f )
+  {
+    fprintf(stderr, "ERROR: Subtração de pontos apenas definida para pontos.\n");
+    std::exit(EXIT_FAILURE);
+  }
+
+  return glm::vec4(v1-u1, v2-u2, v3-u3, 0.0f); // 0.0f para vetores 
 }
 
 // Matriz de mudança de coordenadas para o sistema de coordenadas da Câmera.
@@ -251,6 +272,7 @@ glm::mat4 Matrix_Camera_View(glm::vec4 position_c, glm::vec4 view_vector, glm::v
     glm::vec4 v = crossproduct(w,u);
 
     glm::vec4 origin_o = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    glm::vec4 position_c_vec = subPoints(origin_o, position_c);
 
     float ux = u.x;
     float uy = u.y;
@@ -272,9 +294,9 @@ glm::mat4 Matrix_Camera_View(glm::vec4 position_c, glm::vec4 view_vector, glm::v
         // definido somente para argumentos que são VETORES. Não existe produto
         // escalar de PONTOS.
         //
-        ux,     uy,    uz,   dotproduct(-u, position_c),  // LINHA 1
-        vx,     vy,    vz,   dotproduct(-v, position_c),  // LINHA 2
-        wx,     wy,    wz,   dotproduct(-w, position_c),  // LINHA 3
+        ux,     uy,    uz,   dotproduct(-u, position_c_vec),  // LINHA 1
+        vx,     vy,    vz,   dotproduct(-v, position_c_vec),  // LINHA 2
+        wx,     wy,    wz,   dotproduct(-w, position_c_vec),  // LINHA 3
         0.0f , 0.0f , 0.0f , 1.0f                // LINHA 4
     );
 }
