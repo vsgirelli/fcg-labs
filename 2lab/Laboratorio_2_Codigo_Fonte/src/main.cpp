@@ -122,6 +122,12 @@ bool g_UsePerspectiveProjection = true;
 // Variável que controla se o texto informativo será mostrado na tela.
 bool g_ShowInfoText = true;
 
+bool pressed = false;
+bool key_w_press = false;
+bool key_a_press = false;
+bool key_s_press = false;
+bool key_d_press = false;
+
 int main()
 {
     // Inicializamos a biblioteca GLFW, utilizada para criar uma janela do
@@ -239,6 +245,10 @@ int main()
     glm::mat4 the_model;
     glm::mat4 the_view;
 
+    glm::vec4 camera_position_c ;
+    glm::vec4 camera_view_vector;
+    glm::vec4 multiplicacao;
+
     // Ficamos em loop, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
     {
@@ -276,10 +286,51 @@ int main()
 
         // Abaixo definimos as varáveis que efetivamente definem a câmera virtual.
         // Veja slides 165-175 do documento "Aula_08_Sistemas_de_Coordenadas.pdf".
-        glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
-        glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
-        glm::vec4 camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
+        //glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
+        //glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+        // glm::vec4 camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
+        //glm::vec4 camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
+
+        glm::vec4 free_camera = glm::vec4(-x,-y,-z,0.0f);
+        if(!pressed)
+            {
+                camera_position_c  = glm::vec4(x,y,z,1.0f); //
+            }
+
+        if (key_w_press)
+            {
+                camera_position_c.x +=  0.02*free_camera.x;
+                camera_position_c.y +=  0.02*free_camera.y;
+                camera_position_c.z +=  0.02*free_camera.z;
+                pressed = true;
+            }
+
+         if (key_s_press)
+            {
+                camera_position_c.x -=  0.02*free_camera.x;
+                camera_position_c.y -=  0.02*free_camera.y;
+                camera_position_c.z -= 0.02*free_camera.z;
+                pressed = true;
+            }
+
+        if (key_a_press)
+            {
+                multiplicacao = Matrix_Rotate_Y(1.5708) * free_camera;
+                camera_position_c.x +=  0.02 * multiplicacao.x ;
+                camera_position_c.z += 0.02 * multiplicacao.z ;
+                pressed = true;
+            }
+        if (key_d_press)
+            {
+                multiplicacao = Matrix_Rotate_Y(1.5708) * free_camera;
+                camera_position_c.x -=  0.02 * multiplicacao.x ;
+                camera_position_c.z -= 0.02 * multiplicacao.z ;
+                pressed = true;
+            }
         glm::vec4 camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
+        camera_view_vector = free_camera;
+
+
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slide 179 do
@@ -1054,21 +1105,48 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         g_AngleZ = 0.0f;
     }
 
-    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-      camera_position_c += 0.1f*camera_view_vector;
+    // Testar se WASD foram pressionadas
+    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    {
+        key_w_press = true;
     }
 
-    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-      camera_position_c -= 0.1f*crossproduct(camera_view_vector, camera_up_vector);
+    if  (key == GLFW_KEY_A && action == GLFW_PRESS)
+    {
+        key_a_press = true;
     }
 
-    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-      camera_position_c -= 0.1f*camera_view_vector;
+     if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    {
+        key_s_press = true;
     }
 
-    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-      camera_position_c -= 0.1f*crossproduct(camera_view_vector, camera_up_vector);
+    if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    {
+        key_d_press =true;
     }
+
+    // Testar se WASD foram soltas 
+    if (key == GLFW_KEY_W && action == GLFW_RELEASE)
+    {
+        key_w_press = false;
+    }
+
+    if (key == GLFW_KEY_S && action == GLFW_RELEASE)
+    {
+        key_s_press = false;
+    }
+
+    if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+    {
+        key_a_press = false;
+    }
+
+    if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+    {
+        key_d_press = false;
+    }
+
     // Se o usuário apertar a tecla P, utilizamos projeção perspectiva.
     if (key == GLFW_KEY_P && action == GLFW_PRESS)
     {
