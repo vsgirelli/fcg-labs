@@ -100,6 +100,10 @@ float g_AngleX = 0.0f;
 float g_AngleY = 0.0f;
 float g_AngleZ = 0.0f;
 
+float pos_x = 0.0f;
+float pox_y = 0.0f;
+float pos_z = 0.0f;
+
 // "g_LeftMouseButtonPressed = true" se o usuário está com o botão esquerdo do mouse
 // pressionado no momento atual. Veja função MouseButtonCallback().
 bool g_LeftMouseButtonPressed = false;
@@ -1050,6 +1054,21 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         g_AngleZ = 0.0f;
     }
 
+    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+      camera_position_c += 0.1f*camera_view_vector;
+    }
+
+    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+      camera_position_c -= 0.1f*crossproduct(camera_view_vector, camera_up_vector);
+    }
+
+    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+      camera_position_c -= 0.1f*camera_view_vector;
+    }
+
+    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+      camera_position_c -= 0.1f*crossproduct(camera_view_vector, camera_up_vector);
+    }
     // Se o usuário apertar a tecla P, utilizamos projeção perspectiva.
     if (key == GLFW_KEY_P && action == GLFW_PRESS)
     {
