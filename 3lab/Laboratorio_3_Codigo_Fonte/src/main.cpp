@@ -384,7 +384,7 @@ int main()
         PopMatrix(model);
 
         PushMatrix(model); // push pra desenhar a cabeça
-          model = model * Matrix_Translate(g_TorsoPositionX, g_TorsoPositionY + 0.05f, 0.0f); // transalada pra cima do torso
+          model = model * Matrix_Translate(0.0f, 0.05f, 0.0f); // transalada pra cima do torso
           model = model
             * Matrix_Rotate_Z(g_AngleZ)
             * Matrix_Rotate_Y(-g_AngleY) // como muda o sentido, tem que alterar como rotaciona em Y
